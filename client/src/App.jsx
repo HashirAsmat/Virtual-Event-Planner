@@ -19,8 +19,7 @@ function App() {
         <Route path="emailVerificationPage" element={<EmailVerificationPage/>} />
         {/* Protected routes with Layout */}
         <Route element={<Protected isAuth={true}><Layout /></Protected>}>
-          <Route path="home" element={<Home />} />  {/* Renders Home in the Layout's Outlet */}
-
+          <Route path="home" element={<Home />} /> {/* Renders Home in the Layout's Outlet */}
         </Route>
       </Routes>
     </BrowserRouter>
