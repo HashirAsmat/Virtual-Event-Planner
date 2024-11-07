@@ -1,0 +1,76 @@
+1. User Signup Process
+Route: POST /signup
+Flow:
+The user submits a signup request with their email and other necessary details.
+An OTP is generated and sent to the user's email for verification.
+The user is redirected to an OTP verification form on the frontend.
+
+
+2. Email Verification
+Route: POST /verify-otp/:email
+Flow:
+The user enters the OTP received via email in the OTP verification form.
+The backend verifies the OTP against the one stored in the cache.
+
+If the OTP is valid:
+The user's email is marked as verified.
+A new user account is created.
+A JWT access token is generated for the user.
+The user is automatically logged in and redirected to the home page on the frontend.
+If the OTP is invalid or expired, an error message is returned.
+
+
+3. User Login
+Route: POST /login
+
+Flow:
+The user submits their email and password.
+The backend verifies the credentials.
+If valid, a JWT access token is generated and sent as a cookie.
+The user is redirected to the home page on the frontend.
+If invalid, an error message is returned.
+
+
+4. User Logout
+Route: POST /logout
+
+Flow:
+The user clicks the logout button.
+The JWT access token is deleted from the cookie.
+The user is redirected to the login page on the frontend.
+
+
+5. Password Reset Process
+Request Password Reset OTP
+
+Route: POST /resetPassOtpRequest/:email
+Flow:
+The user enters their email on the password reset page.
+They click the "Verify Email" button, which triggers this route.
+An OTP is generated and sent to the user's email.
+The user is redirected to a page where they can enter the reset password OTP.
+
+
+Verify Reset Password OTP
+Route: POST /verify-ResetPassOtp/:email
+Flow:
+The user enters the OTP for resetting their password.
+The backend verifies the OTP against the one stored in the cache.
+If valid:
+A response with resetOtpIsValid: true is returned.
+The frontend checks this value and redirects the user to a page where they can enter a new password.
+If invalid, an error message is returned.
+
+
+Update Password
+Route: To be implemented (e.g., POST /update-password/:email)
+Flow:
+The user enters and confirms their new password.
+The backend updates the user's password in the database.
+A JWT access token is generated, and the user is logged in automatically.
+The user is redirected to the home page on the frontend.
+
+
+
+Summary
+This organized flow ensures that each step is clear and that the frontend and backend work seamlessly together. The use of JWT tokens, email verification, and OTPs adds layers of security while maintaining a smooth user experience. Each step is designed to handle errors gracefully, ensuring that users are guided through the process effectively.
