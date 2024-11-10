@@ -3,13 +3,13 @@ import eventiumLogo from '../assets/eventium1.png';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 // import { useDispatch } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
+ import { useNavigate } from 'react-router-dom';
 import signupSchema from '../schemas/signupSchema';
 //import { setUser } from '../state/userAuthSlice';
 import { signup } from '../../api/internal';
 
 const SignUp = () => {
-  // const navigate = useNavigate();
+   const navigate = useNavigate();
   // const dispatch = useDispatch();
   const [error, setError] = useState('');
   const [OTPstatus, setOTPstatus] = useState('');
@@ -42,6 +42,8 @@ const SignUp = () => {
         //navigate('/verifyOTP');
         
         setOTPstatus(response.data.message);
+         // Redirect to verify OTP page
+        navigate('/emailVerificationPage');
         
       }
       else if (response.status === 409) { // Handle conflict errors
