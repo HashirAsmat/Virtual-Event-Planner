@@ -7,7 +7,7 @@ const JWTService = require('../services/jwtServices');
 const { NODE_ENV } = require("../config/index");
 const nodemailer = require('nodemailer');
 const NodeCache = require('node-cache');
-const auth = require("../middleware/authenticateUser");
+//const auth = require("../middleware/authenticateUser");
 const myCache = new NodeCache({ stdTTL: 600 });
 
 
