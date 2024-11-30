@@ -8,6 +8,7 @@ import signupSchema from '../schemas/signupSchema';
 //import { setUser } from '../state/userAuthSlice';
 import { signup } from '../../api/internal';
 
+
 const SignUp = () => {
    const navigate = useNavigate();
   // const dispatch = useDispatch();
@@ -23,29 +24,17 @@ const SignUp = () => {
       password: values.password
     };
 
-    console.log('This is handleSignup Data:', data);
+   // console.log('This is handleSignup Data:', data);
 
     try {
       const response = await signup(data);
 
-      if (response.status === 200) {
-        // // Set user in Redux store
-        // const user = {
-        //   _id: response.data.user._id,
-        //   email: response.data.user.email,
-        //   username: response.data.user.username,
-        //   isAuth: response.data.auth
-        // };
-        // dispatch(setUser(user));
-
-        // // Redirect to verify OTP page
-        //navigate('/verifyOTP');
-        
+      if (response.status === 200) { 
         setOTPstatus(response.data.message);
-         // Redirect to verify OTP page
-        navigate('/emailVerificationPage');
-        
+         // Redirect to verify OTP pages
+        navigate(`/emailVerificationPage/${values.email}`);
       }
+
       else if (response.status === 409) { // Handle conflict errors
         setError(response.message || 'Conflict error occurred'); // Show conflict error message
       } else if (response.code === 'ERR_BAD_REQUEST') {
@@ -137,6 +126,7 @@ const SignUp = () => {
               value={values.password}
               onBlur={handleBlur}
               onChange={handleChange}
+              autoComplete="new-password" 
             />
             {errors.password && touched.password ? <p className="text-red-500">{errors.password}</p> : null}
           </div>

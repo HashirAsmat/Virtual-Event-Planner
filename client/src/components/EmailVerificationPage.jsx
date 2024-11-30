@@ -1,13 +1,20 @@
 import {useRef, useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-//import toast from "react-hot-toast";
+import toast from "react-hot-toast";
+import { verifyEmail } from "../../api/internal";
+import { useParams } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setUser } from '../state/userAuthSlice';
 
 const EmailVerificationPage = () => {
+	const params = useParams();
+	const email = params.email;
 
     const [code, setCode] = useState(["", "", "", "", "", ""]);
 	const inputRefs = useRef([]);
-	//const navigate = useNavigate();
+	const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [isLoading, IsLoadingFun] = useState(false)
 
@@ -45,12 +52,30 @@ const EmailVerificationPage = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const verificationCode = code.join("");
-		try { IsLoadingFun(true);
-			// //await verifyEmail(verificationCode);
+		const otp = code.join("");
+		const data = {
+			otp
+		}
+		try { 
+			IsLoadingFun(true);
+			const response = await verifyEmail(email,data);
+            console.log(response);
+			if(response.status === 201){
+				// I need to set the user here in the redux 
+				const user = {
+					_id:response.data.user._id,
+					email:response.data.user.email,
+					username:response.data.user.username,
+					isAuth:response.data.auth
+				}
+				dispatch(setUser(user));
+
+				toast.success("Email verified successfully");
+				navigate("/home");
+			}
 			// navigate("/");
 			//toast.success("Email verified successfully");
-            console.log(verificationCode);
+			
 		} catch (error) {
 			console.log(error);
 		}

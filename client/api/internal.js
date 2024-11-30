@@ -43,3 +43,17 @@ return response;
 //     }
 //     return response;
 // }
+
+
+export const verifyEmail = async(email,data)=>{
+    let response;
+    console.log(`this is data from verify email function ${email}`,data);
+    try{
+    response = await api.post(`/user/verify-otp/${email}`,data); 
+    }
+    catch(error){
+        console.error("Error occurred:", error.response ? error.response.data : error.message);
+        return error.response ? error.response.data : error.message;
+    }
+    return response;
+    }
