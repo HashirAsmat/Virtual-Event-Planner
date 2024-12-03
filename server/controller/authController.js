@@ -7,9 +7,10 @@ const JWTService = require('../services/jwtServices');
 const { NODE_ENV } = require("../config/index");
 const nodemailer = require('nodemailer');
 const NodeCache = require('node-cache');
+const { oauth2client } = require("../utils/googleConfig");
 //const auth = require("../middleware/authenticateUser");
 const myCache = new NodeCache({ stdTTL: 600 });
-
+const axios = require('axios');
 
 // setup transporter for Sending Email
 const transporter = nodemailer.createTransport({
@@ -30,14 +31,14 @@ const authController = {
             password: Joi.string().required(),
         });
 
-       // console.log("signup route hit",req.body);
-       
+        // console.log("signup route hit",req.body);
+
         //1.validate user input
         const error = userRegisterSchema.validate(req.body).error;
-        
+
         //2.if error in validation -> return error via middleware
         if (error) {
-            console.log(error.details,'this is the error i am getting');
+            console.log(error.details, 'this is the error i am getting');
             return next(error);
             //next will call the next middleware right below app.use(router);
         }
@@ -67,8 +68,8 @@ const authController = {
             //4.password Hashing
             const hashedPassword = await bcrypt.hash(password, 10);
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            console.log(hashedPassword,'this is hashedPassword');
+
+            console.log(hashedPassword, 'this is hashedPassword');
 
 
             // //5.Storing OTP and the user data in the Cache - using nodeCache package 
@@ -142,7 +143,7 @@ const authController = {
                 // Clean up the cache
                 myCache.del(email);
 
-                return res.status(201).json({ user:newUser, auth: true, message: "User created seccessfully" });
+                return res.status(201).json({ user: newUser, auth: true, message: "User created seccessfully" });
             } else {
                 return res.status(400).json({ message: 'Invalid OTP' });
             }
@@ -158,7 +159,7 @@ const authController = {
         //send user null as response hence logout
         res.status(200).json({ user: null, auth: false, message: 'user logged out successfully' });
     },
-    
+
     async login(req, res, next) {
         //user register schema
         const userRegisterSchema = Joi.object({
@@ -283,7 +284,7 @@ const authController = {
                 accessToken = JWTService.signAccessToken({
                     _id: user._id,
                 }, '30m');
- 
+
 
                 //send token as cookie
                 res.cookie('accessToken', accessToken, {
@@ -309,7 +310,7 @@ const authController = {
 
     async updatePassword(req, res, next) {
         try {
-             const user = req.user; // from auth middleware
+            const user = req.user; // from auth middleware
             const { password } = req.body;
 
             // Check if the password is provided
@@ -317,7 +318,7 @@ const authController = {
                 return res.status(400).json({ message: "Password is required" });
             }
 
-             if (!user) {
+            if (!user) {
                 return res.status(401).json({ message: "Invalid user" });
             }
 
@@ -337,6 +338,57 @@ const authController = {
         }
     },
 
+    async googleLogin(req, res, next) {
+        try {
+            const { code } = req.query;
+            const googleResp = await oauth2client.getToken(code);
+           
+            oauth2client.setCredentials(googleResp.tokens);
+            const userRes = await axios.get(
+                `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleResp.tokens.access_token}`
+            );
+            
+         
+            const { email, name } = userRes.data;
+
+            console.log('this is email and name',email,name);
+            const user = await User.findOne({
+                email,
+            })
+
+            if (!user) {
+                const user = await User.create({
+                    name,
+                    email
+                })
+                const accessToken = JWTService.signAccessToken({
+                    _id: user._id,
+                }, '30m');
+                res.cookie('accessToken', accessToken, {
+                    maxAge: 1000 * 60 * 60 * 24,
+                    httpOnly: true,
+                });
+                return res.status(200).json({ user, auth: true, message: "User Created and Logged in seccessfully" });
+            }
+
+            //incase user is already present in database
+            const accessToken = JWTService.signAccessToken({
+                _id: user._id,
+            }, '30m');
+            res.cookie('accessToken', accessToken, {
+                maxAge: 1000 * 60 * 60 * 24,
+                httpOnly: true,
+            });
+            return res.status(200).json({ user, auth: true, message: "User Logged in seccessfully" });
+            
+        }
+        catch (err) {
+             // Log the error and send a response
+             console.error("Error updating password:", err);
+             return next(err);
+        }
+    },
+
 }
 
 
@@ -346,25 +398,7 @@ module.exports = authController;
 
 
 
-// const userToRegister = new User({
-//     username,
-//     email,
-//     password: hashedPassword,
-//     verificationToken,
-//     verificationTokenExpiresAt: Date.now() + 24*60*60*1000 // 24 hours
-// });
-
-// const user = await userToRegister.save();
-// let accessToken;
-// accessToken = JWTService.signAccessToken({
-//     _id: user._id,
-// }, '30m');
 
 
-// //send token as cookie
-// res.cookie('accessToken', accessToken, {
-//     maxAge: 1000 * 60 * 60 * 24,
-//     secure:NODE_ENV === "production",
-//     httpOnly: true,//for security purpose , to prevent XSS attack
-//     sameSite:"strict"
-// });
+
+//https://youtu.be/a75PNthqQOI?si=Nt2UZrW4KhJ3Az54  (reference video for implementing Oauth2 - signup and login with google api)

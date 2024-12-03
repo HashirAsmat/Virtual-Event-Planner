@@ -1,17 +1,15 @@
-import { FaFacebookF, FaGoogle } from 'react-icons/fa';
+import {  FaGoogle } from 'react-icons/fa';
 import eventiumLogo from '../assets/eventium1.png';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-// import { useDispatch } from 'react-redux';
- import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import signupSchema from '../schemas/signupSchema';
-//import { setUser } from '../state/userAuthSlice';
 import { signup } from '../../api/internal';
-
+import { useGoogleLogin } from '@react-oauth/google'
+import { googleAuth } from '../../api/internal';
 
 const SignUp = () => {
    const navigate = useNavigate();
-  // const dispatch = useDispatch();
   const [error, setError] = useState('');
   const [OTPstatus, setOTPstatus] = useState('');
 
@@ -23,8 +21,6 @@ const SignUp = () => {
       email: values.email,
       password: values.password
     };
-
-   // console.log('This is handleSignup Data:', data);
 
     try {
       const response = await signup(data);
@@ -57,6 +53,39 @@ const SignUp = () => {
     validationSchema: signupSchema
   });
 
+
+  const responseGoolge = async (authResult) => {
+    try {
+       if(authResult['code']){
+         //console.log(authResult['code']);
+         const response = await googleAuth(authResult['code']);
+         console.log('this is result from backend google api ',response);
+
+        //  const user = {
+				// 	_id:response.data.user._id,
+				// 	email:response.data.user.email,
+				// 	username:response.data.user.username,
+				// 	isAuth:response.data.auth
+				// }
+				// dispatch(setUser(user));
+				// toast.success("Email verified successfully");
+				// navigate("/home");
+
+       }
+    }
+
+    catch (error) {
+        console.log('error while requesting google code:', error);
+    }
+}
+
+
+const googleLogin = useGoogleLogin({
+    onSuccess: responseGoolge,
+    onError: responseGoolge,
+    flow: ''
+})
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
@@ -69,10 +98,7 @@ const SignUp = () => {
           <p className="text-gray-600 font-semibold">Sign up to continue</p>
         </div>
         <div className="flex justify-center gap-8 mb-4">
-          <button className="flex items-center justify-center w-[60px] h-[60px] bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700">
-            <FaFacebookF size={30} />
-          </button>
-          <button className="flex items-center justify-center w-[60px] h-[60px] bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700">
+          <button className="flex items-center justify-center w-[60px] h-[60px] bg-[#2563EB] text-white rounded-lg shadow-md hover:bg-[#729cf8]" onClick={googleLogin}>
             <FaGoogle size={30} />
           </button>
         </div>
@@ -96,6 +122,7 @@ const SignUp = () => {
                 setError(''); // Clear the error when the input changes
                 setOTPstatus('');
               }}
+              autoComplete='username'
             />
             {errors.username && touched.username ? <p className="text-red-500">{errors.username}</p> : null}
           </div>
@@ -113,6 +140,7 @@ const SignUp = () => {
                 setError(''); // Clear the error when the input changes
                 setOTPstatus('');
               }}
+              autoComplete='email'
             />
             {errors.email && touched.email ? <p className="text-red-500">{errors.email}</p> : null}
           </div>

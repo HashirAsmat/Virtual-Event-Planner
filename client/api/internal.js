@@ -57,3 +57,31 @@ export const verifyEmail = async(email,data)=>{
     }
     return response;
     }
+
+
+    export const login = async(data)=>{
+        let response;
+        //console.log('this is data from signup function',data);
+        try{
+        response = await api.post('/user/login',data); //this register is backend endpoint for signup
+        }
+        catch(error){
+            console.error("Error occurred:", error.response ? error.response.data : error.message);
+            return error.response ? error.response.data : error.message;
+        }
+        return response;
+        }
+        
+
+        export const googleAuth = async(code)=>{
+            let response;
+           // console.log('this is data from googleAuth function',code);
+            try{
+             response = await api.get(`/user/login-google?code=${code}`); 
+            }
+            catch(error){
+                console.error("Error occurred:", error.response ? error.response.data : error.message);
+                return error.response ? error.response.data : error.message;
+            }
+            return response;
+            }
