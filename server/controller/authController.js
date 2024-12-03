@@ -342,20 +342,16 @@ const authController = {
         try {
             const { code } = req.query;
             const googleResp = await oauth2client.getToken(code);
-           
+
             oauth2client.setCredentials(googleResp.tokens);
             const userRes = await axios.get(
                 `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleResp.tokens.access_token}`
             );
-            
-         
             const { email, name } = userRes.data;
-
-            console.log('this is email and name',email,name);
+            console.log('this is email and name', email, name);
             const user = await User.findOne({
                 email,
             })
-
             if (!user) {
                 const user = await User.create({
                     name,
@@ -380,12 +376,12 @@ const authController = {
                 httpOnly: true,
             });
             return res.status(200).json({ user, auth: true, message: "User Logged in seccessfully" });
-            
+
         }
         catch (err) {
-             // Log the error and send a response
-             console.error("Error updating password:", err);
-             return next(err);
+            // Log the error and send a response
+            console.error("Error updating password:", err);
+            return next(err);
         }
     },
 
@@ -394,10 +390,6 @@ const authController = {
 
 
 module.exports = authController;
-
-
-
-
 
 
 
