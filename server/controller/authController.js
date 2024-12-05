@@ -348,7 +348,7 @@ const authController = {
                 `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleResp.tokens.access_token}`
             );
             const { email, name } = userRes.data;
-            console.log('this is email and name', email, name);
+           // console.log('this is email and name', email, name);
             const user = await User.findOne({
                 email,
             })
