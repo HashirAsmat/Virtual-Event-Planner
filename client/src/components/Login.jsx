@@ -9,7 +9,7 @@ import { login } from "../../api/internal";
 import loginSchema from "../schemas/login";
 import { useGoogleLogin } from '@react-oauth/google'
 import { googleAuth } from '../../api/internal';
-
+import { showToast } from '../utils/showToast';
 const Login = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
@@ -44,6 +44,7 @@ const Login = () => {
                     isAuth: response.data.auth
                 };
                 dispatch(setUser(user));
+                showToast("Student logged in successfully", "success", true);
                 navigate("/home");
             } else if (response.status === 409) {
                 setError(response.message || 'Conflict error occurred');
@@ -73,7 +74,7 @@ const Login = () => {
 					isAuth:response.data.auth
 				}
 				dispatch(setUser(user));
-				//toast.success("login successfully");
+                showToast("Student logged in successfully", "success", true);
 				navigate("/home");
            }
         }

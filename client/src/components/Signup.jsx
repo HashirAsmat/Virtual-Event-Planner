@@ -9,6 +9,7 @@ import { useGoogleLogin } from '@react-oauth/google'
 import { googleAuth } from '../../api/internal';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../state/userAuthSlice';
+import { showToast } from '../utils/showToast';
 
 const SignUp = () => {
    const navigate = useNavigate();
@@ -70,7 +71,7 @@ const SignUp = () => {
 					isAuth:response.data.auth
 				}
 				dispatch(setUser(user));
-				//toast.success("Email verified successfully");
+			showToast("Student logged in successfully", "success", true);
 				navigate("/home");
 
        }
