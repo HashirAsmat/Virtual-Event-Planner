@@ -66,15 +66,15 @@ const Login = () => {
              //console.log(authResult['code']);
              const response = await googleAuth(authResult['code']);
              console.log('this is result from backend google api ',response);
-                //  const user = {
-				// 	_id:response.data.user._id,
-				// 	email:response.data.user.email,
-				// 	username:response.data.user.username,
-				// 	isAuth:response.data.auth
-				// }
-				// dispatch(setUser(user));
-				// toast.success("login successfully");
-				// navigate("/home");
+                 const user = {
+					_id:response.data.user._id,
+					email:response.data.user.email,
+					username:response.data.user.username,
+					isAuth:response.data.auth
+				}
+				dispatch(setUser(user));
+				//toast.success("login successfully");
+				navigate("/home");
            }
         }
 

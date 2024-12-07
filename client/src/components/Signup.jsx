@@ -7,12 +7,14 @@ import signupSchema from '../schemas/signupSchema';
 import { signup } from '../../api/internal';
 import { useGoogleLogin } from '@react-oauth/google'
 import { googleAuth } from '../../api/internal';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../state/userAuthSlice';
 
 const SignUp = () => {
    const navigate = useNavigate();
   const [error, setError] = useState('');
   const [OTPstatus, setOTPstatus] = useState('');
-
+  const dispatch = useDispatch();
   async function handleSignup(event) {
     event.preventDefault();
 
@@ -61,15 +63,15 @@ const SignUp = () => {
          const response = await googleAuth(authResult['code']);
          console.log('this is result from backend google api ',response);
 
-        //  const user = {
-				// 	_id:response.data.user._id,
-				// 	email:response.data.user.email,
-				// 	username:response.data.user.username,
-				// 	isAuth:response.data.auth
-				// }
-				// dispatch(setUser(user));
-				// toast.success("Email verified successfully");
-				// navigate("/home");
+         const user = {
+					_id:response.data.user._id,
+					email:response.data.user.email,
+					username:response.data.user.username,
+					isAuth:response.data.auth
+				}
+				dispatch(setUser(user));
+				//toast.success("Email verified successfully");
+				navigate("/home");
 
        }
     }
