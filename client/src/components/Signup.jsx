@@ -71,7 +71,7 @@ const SignUp = () => {
 					isAuth:response.data.auth
 				}
 				dispatch(setUser(user));
-			showToast("Student logged in successfully", "success", true);
+			showToast("Student signed up successfully", "success", true);
 				navigate("/home");
 
        }
