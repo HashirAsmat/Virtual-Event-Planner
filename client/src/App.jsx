@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import Login from './components/Login';
 import { PageNotFound } from './components/PageNotFound';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { HelmetProvider } from 'react-helmet-async';
+
 function App() {
  const {isAuth} = useSelector((store)=>store.userReducer);
  const GoogleAuthWrapper = ({children})=>{ 
