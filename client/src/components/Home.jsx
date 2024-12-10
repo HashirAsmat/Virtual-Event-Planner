@@ -3,6 +3,7 @@ const Home = () => {
 <>
 <div className="flex">
  this is home
+ and i am learning websocket and websocket.io for real time communication app 
 </div>
 </>
  
