@@ -44,7 +44,7 @@ const Sidebar = ({ children }) => {
 
         {/* Using context to pass the expanded variable value to the children component */}
         <sidebarContext.Provider value={{ expanded }}>
-          <ul className='flex-1 px-3 mt-3'>
+          <ul className= {`flex-1 ${expanded ? 'px-3' : 'px-1' } mt-3`}>
             {children}
           </ul>
         </sidebarContext.Provider>
@@ -77,7 +77,7 @@ export function SidebarItems({ icon, text, active, alert }) {
 
   return (
     <li
-      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group 
+      className={`relative flex items-center py-2 flex-1 ${expanded ? 'px-3' : 'px-1' } mt-3  my-1 font-medium rounded-md cursor-pointer transition-colors group 
       ${active ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800" : "hover:bg-indigo-50 text-gray-600"}`}
       onClick={clickHander}
     >
