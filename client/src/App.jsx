@@ -4,11 +4,13 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Protected from './components/Protected';
 import Layout from './components/global/Layout';
 import Home from './components/Home';
+import Projects from './components/Projects';
 import EmailVerificationPage from './components/EmailVerificationPage';
 import { useSelector } from 'react-redux';
 import Login from './components/Login';
 import { PageNotFound } from './components/PageNotFound';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+
 
 function App() {
  const {isAuth} = useSelector((store)=>store.userReducer);
@@ -31,8 +33,10 @@ function App() {
         <Route path="/signup" element={<GoogleAuthWrapper ><SignUp/></GoogleAuthWrapper>} />
 
         {/* Protected routes with Layout */}
-        <Route element={<Protected isAuth={isAuth}><Layout /></Protected>}>
+      
+        <Route element={<Protected isAuth={isAuth}>  <Layout /></Protected>}>
           <Route path="home" element={<Home />} /> {/* Renders Home in the Layout's Outlet */}
+          <Route path="projects" element={<Projects />} />
         </Route>
         <Route path="*" element={<PageNotFound/>} />
       </Routes>

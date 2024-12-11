@@ -348,13 +348,13 @@ const authController = {
                 `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleResp.tokens.access_token}`
             );
             const { email, name } = userRes.data;
-           // console.log('this is email and name', email, name);
+            console.log('this is email and name', email, name);
             const user = await User.findOne({
                 email,
             })
             if (!user) {
                 const user = await User.create({
-                    name,
+                    username:name,
                     email
                 })
                 const accessToken = JWTService.signAccessToken({
@@ -375,7 +375,7 @@ const authController = {
                 maxAge: 1000 * 60 * 60 * 24,
                 httpOnly: true,
             });
-            return res.status(200).json({ user, auth: true, message: "User Logged in seccessfully" });
+             return res.status(200).json({ user, auth: true, message: "User Logged in seccessfully" });
 
         }
         catch (err) {

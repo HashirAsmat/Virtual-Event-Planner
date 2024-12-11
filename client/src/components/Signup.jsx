@@ -60,7 +60,7 @@ const SignUp = () => {
   const responseGoolge = async (authResult) => {
     try {
        if(authResult['code']){
-         //console.log(authResult['code']);
+         console.log('this is auth code',authResult['code']);
          const response = await googleAuth(authResult['code']);
          console.log('this is result from backend google api ',response);
 
