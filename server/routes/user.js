@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controller/authController')
+const authController = require('../controller/authController');
+const userController = require('../controller/userController');
 const auth = require('../middleware/authenticateUser');
 
 router.post('/signup', authController.signupRequest)
@@ -12,5 +13,6 @@ router.post('/resetPassOtpRequest/:email', authController.resetPasswordOtpReques
 router.post('/verify-ResetPassOtp/:email', authController.verifyResetPassOTP);
 router.put('/update-password/',auth, authController.updatePassword);
 
+router.get('/all-users/',auth, userController.getAllUsers);
 //updatePassword
 module.exports = router;
