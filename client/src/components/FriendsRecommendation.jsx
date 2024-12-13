@@ -1,59 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-// Removed 'swiper/css/pagination'
-import { Navigation } from 'swiper/modules'; // Removed Pagination
+import { Navigation } from 'swiper/modules'; // Import Navigation module
+import axios from 'axios';
 
-const users = [
-  // Your large list of users
-  ...Array.from({ length: 1000 }, (_, i) => ({
-    id: i + 1,
-    name: `User ${i + 1}`,
-    profilePic: `https://via.placeholder.com/100?text=User+${i + 1}`,
-    friends: Math.floor(Math.random() * 50),
-  })),
-];
-
-// Helper function to paginate users
-const paginateUsers = (users, pageSize, currentPage) => {
-  const start = currentPage * pageSize;
-  const end = start + pageSize;
-  return users.slice(start, end);
-};
 
 const FriendsRecommendation = () => {
   const pageSize = 12; // Number of users to load at a time
-  const [currentPage, setCurrentPage] = useState(0);
-  const [displayedUsers, setDisplayedUsers] = useState(paginateUsers(users, pageSize, 0));
+  const [displayedUsers, setDisplayedUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [lastId, setLastId] = useState(null); // Track last user's ID for pagination
 
-  // Function to load more users
-  const loadMoreUsers = () => {
-    const nextPage = currentPage + 1;
-    const newUsers = paginateUsers(users, pageSize, nextPage);
-    if (newUsers.length > 0) {
-      setDisplayedUsers((prev) => [...prev, ...newUsers]);
-      setCurrentPage(nextPage);
+  // Function to load users from the backend
+  const loadMoreUsers = async () => {
+    if (loading || !hasMore) return; // Prevent multiple requests at once
+    
+    setLoading(true);
+    try {
+      // Fetch users from the backend
+     
+
+  //  here the integration function ----> need to update this part 
+     const  data  = await axios.get('/api/users', {
+        params: {
+          pageSize,
+          lastId: lastId || '', // Send lastId to get the next set of users
+        },
+      });
+
+      const newUsers = data.users;
+      setDisplayedUsers((prev) => [...prev, ...newUsers]); // Append new users
+      setHasMore(data.hasMore); // Check if more users are available
+      setLastId(data.lastId); // Update lastId for the next batch
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Load the first set of users when the component mounts
+  useEffect(() => {
+    loadMoreUsers();
+  }, []); // Empty dependency array ensures this runs once on mount
 
   return (
     <div className="flex justify-center items-center p-5 bg-gray-100">
       <div className="max-w-5xl w-full">
         <Swiper
-          modules={[Navigation]} // Removed Pagination module
+          modules={[Navigation]}
           spaceBetween={20}
           slidesPerView={3}
           navigation
           onReachEnd={() => {
-            // Trigger loadMoreUsers when the last slide is reached
-            console.log('Reached end of slides');
-            loadMoreUsers();
+            if (hasMore) {
+              loadMoreUsers(); // Trigger loadMoreUsers when the end is reached
+            }
           }}
           breakpoints={{
-            640: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
           }}
           className="w-full"
         >
@@ -81,6 +90,8 @@ const FriendsRecommendation = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        {loading && <p className="text-center mt-4">Loading...</p>}
+        {!hasMore && <p className="text-center mt-4">No more users to load</p>}
       </div>
     </div>
   );
