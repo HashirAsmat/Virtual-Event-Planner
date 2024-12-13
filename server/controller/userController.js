@@ -24,7 +24,45 @@ const userController = {
        
     },
     
-}
+    
+        //**** Infinity load controller *****
+    // async getAllUsers(req, res, next) {
+    //     const { page, pageSize, lastId } = req.params; // Accessing route parameters via req.params
+        
+    //     try {
+    //         let query = {};
+    
+    //         // Check if lastId is provided (pagination logic)
+    //         if (lastId) {
+    //             query._id = { $gt: lastId }; // Fetch users with _id greater than lastId
+    //         }
+    
+    //         // Fetch the next batch of users
+    //         const users = await User.find(query)
+    //             .sort({ _id: 1 }) // Sort by _id to ensure consistent order
+    //             .limit(Number(pageSize));
+    
+    //         const totalUsers = await User.countDocuments(); // Optional: For metadata
+    
+    //         // Send response with users and pagination info
+    //         res.status(200).json({
+    //             users,
+    //             totalUsers,
+    //             hasMore: users.length === Number(pageSize), // Indicates if more users are available
+    //             lastId: users.length > 0 ? users[users.length - 1]._id : null, // Pass last user's _id
+    //             message: "Users fetched successfully",
+    //         });
+    //     } catch (err) {
+    //         next(err);
+    //     }
+    // }
+    
+
+
+    };
+    
+    
+
 
 
 

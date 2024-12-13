@@ -14,5 +14,6 @@ router.post('/verify-ResetPassOtp/:email', authController.verifyResetPassOTP);
 router.put('/update-password/',auth, authController.updatePassword);
 
 router.get('/all-users/',auth, userController.getAllUsers);
-//updatePassword
+// router.get('/all-users/:page/:pageSize/:lastId', auth, userController.getAllUsers); //infinity load route...
+
 module.exports = router;
