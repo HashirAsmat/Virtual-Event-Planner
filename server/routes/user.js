@@ -12,8 +12,9 @@ router.get('/login-google',authController.googleLogin);
 router.post('/resetPassOtpRequest/:email', authController.resetPasswordOtpRequest);
 router.post('/verify-ResetPassOtp/:email', authController.verifyResetPassOTP);
 router.put('/update-password/',auth, authController.updatePassword);
+router.get('/all-users/', auth, userController.getAllUsers); 
+router.get('/allUsers-infinityload/:pageSize/:lastId',auth, userController.getAllUsersInfinity); //infinity load route...
 
-router.get('/all-users/',auth, userController.getAllUsers);
-// router.get('/all-users/:page/:pageSize/:lastId', auth, userController.getAllUsers); //infinity load route...
 
 module.exports = router;
+//,auth, userController.getAllUsersInfinity

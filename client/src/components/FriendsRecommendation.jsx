@@ -12,7 +12,6 @@ const FriendsRecommendation = () => {
   const [loading, setLoading] = useState(false); // State to track if users are currently being fetched
   const [hasMore, setHasMore] = useState(true); // State to check if more users are available to load
   const [lastId, setLastId] = useState(null); // Tracks the last loaded user's ID for pagination
-
   // Function to fetch users from the backend
   const loadMoreUsers = async () => {
     if (loading || !hasMore) return; // Prevent fetching if already loading or no more users to load
