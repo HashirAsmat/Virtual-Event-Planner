@@ -47,6 +47,7 @@ const userController = {
                 users.pop(); // Remove the extra user from the result
             }
 
+            
             const totalUsers = await User.countDocuments(); // Optional: For metadata
 
             // Send response with users and pagination info
