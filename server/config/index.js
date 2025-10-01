@@ -5,6 +5,8 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_PASS = process.env.GMAIL_PASS;
 
 const NODE_ENV = process.env.NODE_ENV;
 module.exports = {
@@ -15,4 +17,6 @@ module.exports = {
     NODE_ENV,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
+    GMAIL_USER,
+    GMAIL_PASS
 }

@@ -1,12 +1,11 @@
 import DailyReport from "./DailyReport";
-//import FriendsRecommendation from "./FriendsRecommendation";
+import FriendsRecommendation from "./FriendsRecommendation";
 
 const Home = () => {
   return (
    <>
    <DailyReport/>
-   {/* <FriendsRecommendation/>    */}
-   
+   <FriendsRecommendation/>   
    </>
   );
 };

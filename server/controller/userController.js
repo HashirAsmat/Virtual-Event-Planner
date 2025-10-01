@@ -30,7 +30,7 @@ const userController = {
         const { pageSize, lastId } = req.params; // Accessing route parameters via req.params
         try {
             let query = {};
-
+            console.log('params at backend',pageSize,lastId);
             // Check if lastId is valid and provided
             if (lastId && lastId !== 'null' && lastId !== 'undefined' && lastId !== ':lastId') {
                 query._id = { $gt: lastId }; // Fetch users with _id greater than lastId

@@ -4,7 +4,7 @@ const User = require("../models/user");
 const bcrypt = require('bcryptjs');
 const UserDTO = require('../dto/user');
 const JWTService = require('../services/jwtServices');
-const { NODE_ENV } = require("../config/index");
+const { NODE_ENV, GMAIL_USER, GMAIL_PASS } = require("../config/index");
 const nodemailer = require('nodemailer');
 const NodeCache = require('node-cache');
 const { oauth2client } = require("../utils/googleConfig");
@@ -16,8 +16,8 @@ const axios = require('axios');
 const transporter = nodemailer.createTransport({
     service: 'Gmail', // email service (google)
     auth: {
-        user: 'hashirkhattak123@gmail.com', // Your Gmail address
-        pass: 'lxby keid twmd mush' // Your Gmail App password - app name(nodeMailer) 
+        user: GMAIL_USER, // Your Gmail address
+        pass: GMAIL_PASS // Your Gmail App password - app name(nodeMailer) 
     }
 });
 

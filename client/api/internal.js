@@ -85,3 +85,19 @@ export const verifyEmail = async(email,data)=>{
             }
             return response;
             }
+
+
+
+            
+        export const infinityLoadUsers = async(pageSize,lastId)=>{
+            let response;
+            console.log('this is data from infinytload function','this is pagesize:',pageSize,' and this is lastID:',lastId);
+            try{
+             response = await api.get(`/user/allUsers-infinityload/${pageSize}/${lastId}/`); 
+            }
+            catch(error){
+                console.error("Error occurred:", error.response ? error.response.data : error.message);
+                return error.response ? error.response.data : error.message;
+            }
+            return response;
+            }
